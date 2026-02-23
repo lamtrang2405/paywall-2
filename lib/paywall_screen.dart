@@ -67,24 +67,19 @@ class _PaywallScreenState extends State<PaywallScreen>
             _ambientGlow(),
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 22),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
                     _topBar(),
-                    const SizedBox(height: 4),
                     Expanded(child: _heroVisual()),
                     _headline(),
-                    const SizedBox(height: 6),
-                    _socialProof(),
                     const SizedBox(height: 14),
-                    _featureStrip(),
-                    const SizedBox(height: 16),
-                    _planSelector(),
+                    _plans(),
                     const SizedBox(height: 14),
                     _ctaButton(),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     _footerInfo(),
-                    SizedBox(height: bot > 0 ? 2 : 8),
+                    SizedBox(height: bot > 0 ? 2 : 6),
                   ],
                 ),
               ),
@@ -104,14 +99,19 @@ class _PaywallScreenState extends State<PaywallScreen>
         return Stack(
           children: [
             Positioned(
-              top: -60 + v * 15,
-              left: -80,
-              child: _glowOrb(260, _crimson, 0.07 + v * 0.03),
+              top: -80 + v * 20,
+              left: -100,
+              child: _glowOrb(320, _crimson, 0.08 + v * 0.04),
             ),
             Positioned(
-              top: 140,
-              right: -90 + v * 10,
-              child: _glowOrb(220, _violet, 0.05 + v * 0.025),
+              top: 100,
+              right: -110 + v * 15,
+              child: _glowOrb(280, _violet, 0.06 + v * 0.03),
+            ),
+            Positioned(
+              bottom: -60,
+              left: 40,
+              child: _glowOrb(200, _crimson, 0.04 + v * 0.02),
             ),
           ],
         );
@@ -136,7 +136,7 @@ class _PaywallScreenState extends State<PaywallScreen>
   // ── Top Bar ───────────────────────────────────────────────
   Widget _topBar() {
     return Padding(
-      padding: const EdgeInsets.only(top: 4),
+      padding: const EdgeInsets.only(top: 2, bottom: 2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [_closeBtn(), _offerBadge()],
@@ -147,14 +147,14 @@ class _PaywallScreenState extends State<PaywallScreen>
   Widget _closeBtn() => GestureDetector(
         onTap: () => Navigator.of(context).maybePop(),
         child: Container(
-          width: 36,
-          height: 36,
+          width: 34,
+          height: 34,
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(10),
           ),
           child: const Icon(Icons.close_rounded,
-              color: Colors.white54, size: 18),
+              color: Colors.white54, size: 17),
         ),
       );
 
@@ -164,7 +164,7 @@ class _PaywallScreenState extends State<PaywallScreen>
         curve: Curves.elasticOut,
         builder: (_, v, c) => Transform.scale(scale: v, child: c),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: LinearGradient(colors: [
@@ -176,13 +176,13 @@ class _PaywallScreenState extends State<PaywallScreen>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.bolt_rounded, color: _amber, size: 13),
+              Icon(Icons.bolt_rounded, color: _amber, size: 12),
               const SizedBox(width: 3),
               Text(
                 '50% OFF',
                 style: TextStyle(
                   color: _amber,
-                  fontSize: 9.5,
+                  fontSize: 9,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 1,
                 ),
@@ -192,14 +192,14 @@ class _PaywallScreenState extends State<PaywallScreen>
         ),
       );
 
-  // ── Hero Visual ───────────────────────────────────────────
+  // ── Hero Visual (ENLARGED) ────────────────────────────────
   Widget _heroVisual() {
     return LayoutBuilder(
       builder: (context, box) {
         final w = box.maxWidth;
-        final bigD = w * 0.30;
-        final smallD = w * 0.20;
-        final spread = w * 0.22;
+        final bigD = w * 0.38;
+        final smallD = w * 0.25;
+        final spread = w * 0.27;
 
         return AnimatedBuilder(
           animation: Listenable.merge([_pulse, _entry, _wave]),
@@ -216,17 +216,33 @@ class _PaywallScreenState extends State<PaywallScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: bigD + 24,
+                    height: bigD + 32,
                     child: Stack(
                       alignment: Alignment.center,
                       clipBehavior: Clip.none,
                       children: [
-                        _glowOrb(bigD * 2.5, _crimson, 0.08 + b * 0.05),
+                        _glowOrb(bigD * 3, _crimson, 0.07 + b * 0.05),
+                        // Outer ring
+                        Transform.scale(
+                          scale: 1.0 + math.sin(b * math.pi * 2) * 0.025,
+                          child: Container(
+                            width: bigD + 40,
+                            height: bigD + 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: _crimson.withValues(
+                                    alpha: 0.06 + b * 0.06),
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                        ),
                         // Left cover
                         Transform.translate(
                           offset: Offset(
-                            -spread - bigD * 0.12 + (1 - entryV) * -40,
-                            6 + math.sin(b * math.pi * 2 + 1.2) * 3,
+                            -spread - bigD * 0.08 + (1 - entryV) * -50,
+                            8 + math.sin(b * math.pi * 2 + 1.2) * 4,
                           ),
                           child:
                               _coverCircle(_covers[0], smallD, dimmed: true),
@@ -234,23 +250,23 @@ class _PaywallScreenState extends State<PaywallScreen>
                         // Right cover
                         Transform.translate(
                           offset: Offset(
-                            spread + bigD * 0.12 + (1 - entryV) * 40,
-                            6 + math.sin(b * math.pi * 2 + 2.4) * 3,
+                            spread + bigD * 0.08 + (1 - entryV) * 50,
+                            8 + math.sin(b * math.pi * 2 + 2.4) * 4,
                           ),
                           child:
                               _coverCircle(_covers[2], smallD, dimmed: true),
                         ),
-                        // Pulsing ring
+                        // Inner pulsing ring
                         Transform.scale(
                           scale: 1.0 + math.sin(b * math.pi * 2) * 0.04,
                           child: Container(
-                            width: bigD + 18,
-                            height: bigD + 18,
+                            width: bigD + 20,
+                            height: bigD + 20,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: _crimson.withValues(
-                                    alpha: 0.1 + b * 0.18),
+                                    alpha: 0.12 + b * 0.2),
                                 width: 1.5,
                               ),
                             ),
@@ -259,17 +275,17 @@ class _PaywallScreenState extends State<PaywallScreen>
                         // Center cover (hero)
                         Transform.translate(
                           offset:
-                              Offset(0, math.sin(b * math.pi * 2) * 2),
+                              Offset(0, math.sin(b * math.pi * 2) * 3),
                           child: _coverCircle(_covers[1], bigD,
                               isCenter: true),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 18),
                   SizedBox(
-                    width: w * 0.65,
-                    height: 22,
+                    width: w * 0.75,
+                    height: 28,
                     child: CustomPaint(
                       painter: _WaveformPainter(
                         progress: _wave.value,
@@ -297,14 +313,14 @@ class _PaywallScreenState extends State<PaywallScreen>
         boxShadow: [
           if (isCenter)
             BoxShadow(
-              color: _crimson.withValues(alpha: 0.25),
-              blurRadius: 28,
+              color: _crimson.withValues(alpha: 0.3),
+              blurRadius: 36,
               spreadRadius: -4,
             ),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.5),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -312,9 +328,9 @@ class _PaywallScreenState extends State<PaywallScreen>
         shape: BoxShape.circle,
         border: Border.all(
           color: isCenter
-              ? _crimson.withValues(alpha: 0.45)
+              ? _crimson.withValues(alpha: 0.5)
               : Colors.white.withValues(alpha: 0.08),
-          width: isCenter ? 2 : 1,
+          width: isCenter ? 2.5 : 1,
         ),
       ),
       child: ClipOval(
@@ -323,12 +339,12 @@ class _PaywallScreenState extends State<PaywallScreen>
           children: [
             Image.asset(asset, fit: BoxFit.cover),
             if (dimmed)
-              Container(color: Colors.black.withValues(alpha: 0.45)),
+              Container(color: Colors.black.withValues(alpha: 0.4)),
             if (dimmed)
               Center(
                 child: Icon(Icons.lock_rounded,
-                    color: Colors.white.withValues(alpha: 0.3),
-                    size: size * 0.22),
+                    color: Colors.white.withValues(alpha: 0.35),
+                    size: size * 0.24),
               ),
             if (isCenter) _centerPlayBtn(size),
           ],
@@ -338,9 +354,9 @@ class _PaywallScreenState extends State<PaywallScreen>
   }
 
   Widget _centerPlayBtn(double parentSize) {
-    final s = parentSize * 0.30;
+    final s = parentSize * 0.32;
     return Align(
-      alignment: const Alignment(0, 0.75),
+      alignment: const Alignment(0, 0.72),
       child: Container(
         width: s,
         height: s,
@@ -349,7 +365,7 @@ class _PaywallScreenState extends State<PaywallScreen>
           gradient: const LinearGradient(colors: [_crimson, _violet]),
           boxShadow: [
             BoxShadow(
-                color: _crimson.withValues(alpha: 0.5), blurRadius: 10),
+                color: _crimson.withValues(alpha: 0.55), blurRadius: 12),
           ],
         ),
         child: Icon(Icons.play_arrow_rounded,
@@ -358,7 +374,7 @@ class _PaywallScreenState extends State<PaywallScreen>
     );
   }
 
-  // ── Headline ──────────────────────────────────────────────
+  // ── Headline (redesigned: compact, integrated with features) ──
   Widget _headline() {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
@@ -373,133 +389,94 @@ class _PaywallScreenState extends State<PaywallScreen>
         children: [
           ShaderMask(
             shaderCallback: (bounds) => const LinearGradient(
-              colors: [Colors.white, Color(0xFFF4A0B8)],
+              colors: [Colors.white, Color(0xFFE8A0BE)],
             ).createShader(bounds),
             child: const Text(
               'Unlock Every Whisper',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 28,
+                fontSize: 26,
                 fontWeight: FontWeight.w800,
                 letterSpacing: -0.5,
                 height: 1.1,
               ),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            'Thousands of intimate audio stories await',
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.4),
-              fontSize: 13,
-            ),
+          const SizedBox(height: 6),
+          // Inline feature chips + social proof combined
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              _chip(Icons.all_inclusive_rounded, 'Unlimited'),
+              _chip(Icons.headphones_rounded, 'HD Audio'),
+              _chip(Icons.download_rounded, 'Offline'),
+              _chip(Icons.auto_awesome_rounded, 'Daily New'),
+              _ratingChip(),
+            ],
           ),
         ],
       ),
     );
   }
 
-  // ── Social Proof ──────────────────────────────────────────
-  Widget _socialProof() {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 950),
-      curve: Curves.easeOut,
-      builder: (_, v, c) => Opacity(opacity: v, child: c),
+  Widget _chip(IconData icon, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+      ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          ...List.generate(
-              5,
-              (_) =>
-                  const Icon(Icons.star_rounded, color: _amber, size: 13)),
+          Icon(icon, color: _crimson, size: 12),
           const SizedBox(width: 4),
-          const Text('4.9',
+          Text(label,
               style: TextStyle(
-                  color: _amber,
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w700)),
-          _dotSep(),
-          Text('2M+ listeners',
-              style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.4),
-                  fontSize: 11)),
-          _dotSep(),
-          const Icon(Icons.local_fire_department_rounded,
-              color: Color(0xFFFF6B6B), size: 12),
-          const SizedBox(width: 2),
-          const Text('Trending',
-              style: TextStyle(
-                  color: Color(0xFFFF6B6B),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600)),
+                color: Colors.white.withValues(alpha: 0.7),
+                fontSize: 10.5,
+                fontWeight: FontWeight.w500,
+              )),
         ],
       ),
     );
   }
 
-  Widget _dotSep() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 7),
-        child: Container(
-          width: 3,
-          height: 3,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white.withValues(alpha: 0.15),
-          ),
-        ),
-      );
-
-  // ── Feature Strip ─────────────────────────────────────────
-  Widget _featureStrip() {
-    final items = [
-      (Icons.all_inclusive_rounded, 'Unlimited'),
-      (Icons.headphones_rounded, 'HD Audio'),
-      (Icons.download_rounded, 'Offline'),
-      (Icons.auto_awesome_rounded, 'New Daily'),
-    ];
-
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 1000),
-      curve: Curves.easeOut,
-      builder: (_, v, c) => Opacity(
-        opacity: v,
-        child:
-            Transform.translate(offset: Offset(0, 10 * (1 - v)), child: c),
+  Widget _ratingChip() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      decoration: BoxDecoration(
+        color: _amber.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: _amber.withValues(alpha: 0.15)),
       ),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.04),
-          borderRadius: BorderRadius.circular(14),
-          border:
-              Border.all(color: Colors.white.withValues(alpha: 0.06)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: items
-              .map((item) => Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(item.$1, color: _crimson, size: 15),
-                      const SizedBox(width: 5),
-                      Text(item.$2,
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.75),
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w500,
-                          )),
-                    ],
-                  ))
-              .toList(),
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.star_rounded, color: _amber, size: 12),
+          const SizedBox(width: 3),
+          Text('4.9',
+              style: TextStyle(
+                color: _amber,
+                fontSize: 10.5,
+                fontWeight: FontWeight.w700,
+              )),
+          const SizedBox(width: 4),
+          Text('2M+',
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.4),
+                fontSize: 10.5,
+              )),
+        ],
       ),
     );
   }
 
-  // ── Plan Selector ─────────────────────────────────────────
-  Widget _planSelector() {
+  // ── Plans (side-by-side cards) ─────────────────────────────
+  Widget _plans() {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
       duration: const Duration(milliseconds: 1050),
@@ -509,172 +486,210 @@ class _PaywallScreenState extends State<PaywallScreen>
         child:
             Transform.translate(offset: Offset(0, 12 * (1 - v)), child: c),
       ),
-      child: Column(
+      child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.04)),
-            ),
-            child: Row(
-              children: [
-                _planTab(0, 'Weekly'),
-                _planTab(1, 'Annual'),
-              ],
-            ),
+          _planCard(
+            index: 0,
+            period: 'Weekly',
+            price: '\$6.99',
+            perUnit: '/week',
+            detail: 'No commitment',
           ),
-          const SizedBox(height: 12),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 280),
-            child: _selectedPlan == 1 ? _annualInfo() : _weeklyInfo(),
+          const SizedBox(width: 10),
+          _planCard(
+            index: 1,
+            period: 'Annual',
+            price: '\$39.99',
+            perUnit: '/year',
+            detail: '\$0.76/week',
+            badge: 'BEST VALUE',
+            trialText: '7-day free trial',
           ),
         ],
       ),
     );
   }
 
-  Widget _planTab(int index, String label) {
+  Widget _planCard({
+    required int index,
+    required String period,
+    required String price,
+    required String perUnit,
+    required String detail,
+    String? badge,
+    String? trialText,
+  }) {
     final sel = _selectedPlan == index;
+
     return Expanded(
       child: GestureDetector(
         onTap: () => setState(() => _selectedPlan = index),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeOutCubic,
+          padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
           decoration: BoxDecoration(
             gradient: sel
-                ? LinearGradient(colors: [
-                    _crimson.withValues(alpha: 0.18),
-                    _violet.withValues(alpha: 0.08),
-                  ])
+                ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                        _crimson.withValues(alpha: 0.12),
+                        _violet.withValues(alpha: 0.06),
+                      ])
                 : null,
-            borderRadius: BorderRadius.circular(11),
-            border: sel
-                ? Border.all(color: _crimson.withValues(alpha: 0.3))
+            color: sel ? null : Colors.white.withValues(alpha: 0.03),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: sel
+                  ? _crimson.withValues(alpha: 0.45)
+                  : Colors.white.withValues(alpha: 0.06),
+              width: sel ? 1.5 : 1,
+            ),
+            boxShadow: sel
+                ? [
+                    BoxShadow(
+                        color: _crimson.withValues(alpha: 0.12),
+                        blurRadius: 20,
+                        spreadRadius: -4)
+                  ]
                 : null,
           ),
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(label,
-                    style: TextStyle(
-                      color: sel
-                          ? Colors.white
-                          : Colors.white.withValues(alpha: 0.35),
-                      fontSize: 13,
-                      fontWeight: sel ? FontWeight.w600 : FontWeight.w400,
-                    )),
-                if (index == 1) ...[
-                  const SizedBox(width: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      gradient:
-                          const LinearGradient(colors: [_crimson, _violet]),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: const Text('SAVE 88%',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.5,
-                        )),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      // Radio indicator
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: 16,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: sel
+                              ? const LinearGradient(
+                                  colors: [_crimson, _violet])
+                              : null,
+                          border: sel
+                              ? null
+                              : Border.all(
+                                  color:
+                                      Colors.white.withValues(alpha: 0.18),
+                                  width: 1.5),
+                        ),
+                        child: sel
+                            ? const Icon(Icons.check_rounded,
+                                color: Colors.white, size: 10)
+                            : null,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(period,
+                          style: TextStyle(
+                            color: sel
+                                ? Colors.white
+                                : Colors.white.withValues(alpha: 0.4),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ],
                   ),
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(price,
+                          style: TextStyle(
+                            color: sel
+                                ? Colors.white
+                                : Colors.white.withValues(alpha: 0.65),
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                          )),
+                      Text(perUnit,
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            fontSize: 11,
+                          )),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(detail,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.25),
+                        fontSize: 10,
+                      )),
+                  if (trialText != null) ...[
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF22C55E).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                            color: const Color(0xFF22C55E)
+                                .withValues(alpha: 0.2)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.check_circle_rounded,
+                              color: Color(0xFF22C55E), size: 10),
+                          const SizedBox(width: 3),
+                          Text(trialText,
+                              style: const TextStyle(
+                                color: Color(0xFF22C55E),
+                                fontSize: 9,
+                                fontWeight: FontWeight.w600,
+                              )),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
-              ],
-            ),
+              ),
+              if (badge != null)
+                Positioned(
+                  top: -22,
+                  right: 0,
+                  left: 0,
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 3),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                            colors: [_crimson, _violet]),
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                              color: _crimson.withValues(alpha: 0.4),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2)),
+                        ],
+                      ),
+                      child: Text(badge,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 8.5,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.8)),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _annualInfo() {
-    return Column(
-      key: const ValueKey('annual'),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            const Text('\$39.99',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                )),
-            Text('/year',
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.4),
-                  fontSize: 14,
-                )),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.check_circle_rounded,
-                color: Color(0xFF22C55E), size: 13),
-            const SizedBox(width: 4),
-            const Text('7-day free trial',
-                style: TextStyle(
-                  color: Color(0xFF22C55E),
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w500,
-                )),
-            _dotSep(),
-            Text('\$0.76/week',
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.3),
-                  fontSize: 11.5,
-                )),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _weeklyInfo() {
-    return Column(
-      key: const ValueKey('weekly'),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            const Text('\$6.99',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                )),
-            Text('/week',
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.4),
-                  fontSize: 14,
-                )),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Text('Billed weekly · No commitment',
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.3),
-              fontSize: 11.5,
-            )),
-      ],
-    );
-  }
-
-  // ── CTA Button ────────────────────────────────────────────
+  // ── CTA Button (redesigned: taller, bolder) ────────────────
   Widget _ctaButton() {
     return AnimatedBuilder(
       animation: Listenable.merge([_shimmer, _pulse]),
@@ -684,18 +699,18 @@ class _PaywallScreenState extends State<PaywallScreen>
 
         return Container(
           width: double.infinity,
-          height: 54,
+          height: 56,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(16),
             gradient: const LinearGradient(
               colors: [_crimson, Color(0xFFD43B6A), _violet],
             ),
             boxShadow: [
               BoxShadow(
-                color: _crimson.withValues(alpha: 0.2 + glowV * 0.2),
-                blurRadius: 20,
+                color: _crimson.withValues(alpha: 0.25 + glowV * 0.25),
+                blurRadius: 24,
                 spreadRadius: -2,
-                offset: const Offset(0, 6),
+                offset: const Offset(0, 8),
               ),
             ],
           ),
@@ -703,14 +718,14 @@ class _PaywallScreenState extends State<PaywallScreen>
             children: [
               Positioned.fill(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(16),
                   child: ShaderMask(
                     shaderCallback: (b) => LinearGradient(
                       begin: Alignment(-1.5 + 3.5 * shimP, 0),
                       end: Alignment(-0.5 + 3.5 * shimP, 0),
                       colors: [
                         Colors.white.withValues(alpha: 0),
-                        Colors.white.withValues(alpha: 0.18),
+                        Colors.white.withValues(alpha: 0.2),
                         Colors.white.withValues(alpha: 0),
                       ],
                     ).createShader(b),
@@ -722,30 +737,19 @@ class _PaywallScreenState extends State<PaywallScreen>
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(16),
                   onTap: () {},
                   child: Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (_selectedPlan == 1)
-                          const Padding(
-                            padding: EdgeInsets.only(right: 8),
-                            child: Icon(Icons.lock_open_rounded,
-                                color: Colors.white, size: 18),
-                          ),
-                        Text(
-                          _selectedPlan == 1
-                              ? 'Start Free Trial'
-                              : 'Subscribe Now',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.5,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.3,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      _selectedPlan == 1
+                          ? 'Start Free Trial'
+                          : 'Subscribe Now',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.3,
+                      ),
                     ),
                   ),
                 ),
@@ -757,7 +761,7 @@ class _PaywallScreenState extends State<PaywallScreen>
     );
   }
 
-  // ── Footer ────────────────────────────────────────────────
+  // ── Footer (compact single line) ──────────────────────────
   Widget _footerInfo() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -767,15 +771,15 @@ class _PaywallScreenState extends State<PaywallScreen>
           child: Text(
             _selectedPlan == 1
                 ? '7 days free, then \$39.99/year · Cancel anytime'
-                : 'Auto-renews at \$6.99/week · Cancel anytime',
+                : '\$6.99/week · Cancel anytime',
             key: ValueKey(_selectedPlan),
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.2),
-              fontSize: 10,
+              fontSize: 9.5,
             ),
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 3),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -796,19 +800,19 @@ class _PaywallScreenState extends State<PaywallScreen>
           padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
           child: Text(text,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.18),
-                fontSize: 10.5,
+                color: Colors.white.withValues(alpha: 0.16),
+                fontSize: 10,
                 decoration: TextDecoration.underline,
-                decorationColor: Colors.white.withValues(alpha: 0.1),
+                decorationColor: Colors.white.withValues(alpha: 0.08),
               )),
         ),
       );
 
   Widget _footerDot() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
         child: Container(
-          width: 2.5,
-          height: 2.5,
+          width: 2,
+          height: 2,
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.1),
             shape: BoxShape.circle,
@@ -831,17 +835,17 @@ class _WaveformPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const barCount = 28;
+    const barCount = 36;
     final gap = size.width / barCount;
     final barW = gap * 0.5;
     final half = barCount / 2;
     final paint = Paint();
 
     for (var i = 0; i < barCount; i++) {
-      final phase = i * 0.38;
+      final phase = i * 0.35;
       final norm = (math.sin(progress * math.pi * 2 + phase) + 1) / 2;
       final h = 3 + norm * (size.height - 3);
-      final alpha = 0.18 + norm * 0.35;
+      final alpha = 0.2 + norm * 0.4;
 
       final centerDist = (i - half).abs() / half;
       paint.color =
@@ -853,7 +857,7 @@ class _WaveformPainter extends CustomPainter {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromLTWH(x, y, barW, h),
-          const Radius.circular(1.5),
+          const Radius.circular(2),
         ),
         paint,
       );
